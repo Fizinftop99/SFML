@@ -4,7 +4,7 @@ Entity::Entity() {
 	isLife = true;
 }
 
-void Entity::settings(Anim& a, int X, int Y, float Angle, int R) {
+void Entity::settings(Anim& a, float X, float Y, float Angle, int R) {
     anim = a;
     x = X; y = Y;
     angle = Angle;
@@ -25,26 +25,27 @@ void Entity::draw(RenderWindow& app) {
 
 float Entity::getX()
 {
-    return 0.0f;
+    return x;
 }
 
 float Entity::getY()
 {
-    return 0.0f;
+    return y;
 }
 
 int Entity::getRadius()
 {
-    return 0;
+    return radius;
 }
 
-void Entity::setRadius(int r)
+void Entity::setRadius(int newRadius)
 {
+    radius = newRadius;
 }
 
 float Entity::getAngle()
 {
-    return 0.0f;
+    return angle;
 }
 
 void Entity::changeAngle(float angleChange)
@@ -57,9 +58,9 @@ std::string Entity::getName()
     return name;
 }
 
-void Entity::setName(std::string n)
+void Entity::setName(std::string newName)
 {
-    name = n;
+    name = newName;
 }
 
 bool Entity::getIsLife()

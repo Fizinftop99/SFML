@@ -9,6 +9,9 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <memory>
+
+#include <iostream>
+
 using namespace sf;
 
 bool Game::isCollide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
@@ -47,7 +50,6 @@ void Game::start()
     Anim sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
     Anim sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
 
-
     std::list<std::shared_ptr<Entity>> entities;
 
     for (int i = 0; i < 15; i++)
@@ -57,9 +59,10 @@ void Game::start()
         entities.push_back(a);
     }
 
-    auto p = std::make_shared<Player>();
+    std::shared_ptr<Player> p(new Player());
     p->settings(sPlayer, 200, 200, 0, 20);
     entities.push_back(p);
+    std::cout << p.use_count() << std::endl;
 
     /////main loop/////
     while (app.isOpen())
@@ -76,6 +79,7 @@ void Game::start()
                     std::shared_ptr<Entity> b(new Bullet());
                     b->settings(sBullet, p->getX(), p->getY(), p->getAngle(), 10);
                     entities.push_back(b);
+                    std::cout << p.use_count() << std::endl;
                 }
         }
 
@@ -83,13 +87,15 @@ void Game::start()
         if (Keyboard::isKeyPressed(Keyboard::Left))  p->changeAngle(-3);
         if (Keyboard::isKeyPressed(Keyboard::Up)) p->setFlag(true);
         else p->setFlag(false);
+        std::cout << p.use_count() << std::endl;
 
-
-        for (auto&& a : entities)
-            for (auto&& b : entities)
+        for (auto a : entities)
+            for (auto b : entities)
             {
+                
+            //    /*
                 if (a->getName() == "asteroid" && b->getName() == "bullet")
-                    if (isCollide(std::move(a), std::move(b)))
+                    if (isCollide(a, b))
                     {
                         a->setIsLife(false);
                         b->setIsLife(false);
@@ -108,40 +114,65 @@ void Game::start()
                             entities.push_back(e);
                         }
 
+                        std::cout << "in 1 loop: " << p.use_count() << std::endl;
                     }
+             
+                   if (a->getName() == "player" && b->getName() == "asteroid")
+                       if (isCollide(a, b))
+                       {
+                           std::cout << "in 2 loop\n";
+                           b->setIsLife(false);
 
-                if (a->getName() == "player" && b->getName() == "asteroid")
-                    if (isCollide(std::move(a), std::move(b)))
-                    {
-                        b->setIsLife(false);
+                           std::shared_ptr<Entity> e(new Entity());
+                           e->settings(sExplosion_ship, a->getX(), a->getY());
+                           e->setName("explosion");
+                           entities.push_back(e);
 
-                        std::shared_ptr<Entity> e(new Entity());
-                        e->settings(sExplosion_ship, a->getX(), a->getY());
-                        e->setName("explosion");
-                        entities.push_back(e);
+                           p->settings(sPlayer, Constants::width / 2, Constants::heigth / 2, 0, 20);
+                           p->setDx(0);
+                           std::cout << "in 2.1 loop: " << p.use_count() << 1 << std::endl;
+                           p->setDy(0);
+                           std::cout << "in 2.2 loop: " << p.use_count() << 2 << std::endl;
+                       }
+            //           */
+                if (p->getFlag())  p->setAnimation(sPlayer_go);
+                else   p->setAnimation(sPlayer);
 
-                        p->settings(sPlayer, Constants::width / 2, Constants::heigth / 2, 0, 20);
-                        p->setDx(0);
-                        p->setDy(0);
-                    }
+
+                for (auto e : entities)
+                    if (e->getName() == "explosion")
+                        if (e->getAnim().isEnd()) e->setIsLife(false);
+
+                if (rand() % 150 == 0)
+                {
+                    std::shared_ptr<Entity> a(new Asteroid());
+                    a->settings(sRock, 0, rand() % Constants::heigth, rand() % 360, 25);
+                    entities.push_back(a);
+                }
+
+                for (auto i = entities.begin(); i != entities.end();)
+                {
+                    auto e = i;
+                    e->get()->update();
+                    e->get()->getAnim().update();
+
+                    if (e->get()->getIsLife() == false) 
+                        { i = entities.erase(i); }
+                    else i++;
+                }
+
+
+                for (auto e : entities) {
+                    e->getAnim().update();
+                    e->update();
+                }
+
+
+
+                // drawing
+                app.draw(background);
+                for (auto&& i : entities) i->draw(app);
+                    app.display();
             }
-
-
-        if (p->getFlag())  p->setAnimation(sPlayer_go);
-        else   p->setAnimation(sPlayer);
-
-
-        for (auto&& e : entities)
-            if (e->getName() == "explosion")
-                if (e->getAnim().isEnd()) e->setIsLife(false);
-
-        if (rand() % 150 == 0)
-        {
-            std::shared_ptr<Entity> a(new Asteroid());
-            a->settings(sRock, 0, rand() % Constants::heigth, rand() % 360, 25);
-            entities.push_back(a);
-        }
-        app.draw(background);
-        app.display();
     }
 }

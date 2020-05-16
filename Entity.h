@@ -25,7 +25,7 @@ public:
 
     virtual void setAnimation() {}; // function for class Player
 
-    void settings(Anim& a, int X, int Y, float Angle = 0, int R = 1);
+    void settings(Anim& a, float X, float Y, float Angle = 0, int R = 1);
 
     void draw(RenderWindow& app);
 

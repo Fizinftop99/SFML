@@ -20,7 +20,9 @@ void Player::update()
     }
 
     int maxSpeed = 15;
+
     float speed = sqrt(dx * dx + dy * dy);
+
     if (speed > maxSpeed)
     {
         dx *= maxSpeed / speed;
@@ -45,18 +47,22 @@ bool Player::getFlag()
 	return flag;
 }
 
-void Player::setFlag(bool b) {
+void Player::setFlag(bool b) 
+{
     flag = b;
 }
 
-void Player::setDx(float flag) {
-    dx = flag;
+void Player::setDx(float Dx)
+{
+    dx = Dx;
 }
 
-void Player::setDy(float flag) {
-    dy = flag;
+void Player::setDy(float Dy)
+{
+    dy = Dy;
 }
 
-void Player::setAnimation(Anim a) {
+void Player::setAnimation(Anim a)
+{
     anim = a;
 }
