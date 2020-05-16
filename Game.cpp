@@ -58,6 +58,11 @@ void Game::start()
 
 	for (int i = 0; i < 15; i++)
 	{
+		entities.push_back(
+			std::make_shared<Entity>(Asteroid(static_cast<float>(dis(gen) % Constants::width,
+												static_cast<float>(dis(gen) % Constants::width),
+												static_cast<float>(dis(gen) % 360), 25)
+												
 		std::shared_ptr<Entity> a(new Asteroid());
 		a->settings(sRock, static_cast<float>(dis(gen) % Constants::width), static_cast<float>(dis(gen) % Constants::heigth), static_cast<float>(dis(gen) % 360), 25);
 		entities.push_back(a);
@@ -94,8 +99,6 @@ void Game::start()
 		for (auto a : entities)
 			for (auto b : entities)
 			{
-
-				//    /*
 				if (a->getName() == "asteroid" && b->getName() == "bullet")
 					if (isCollide(a, b))
 					{
@@ -129,6 +132,7 @@ void Game::start()
 						e->settings(sExplosion_ship, a->getX(), a->getY());
 						e->setName("explosion");
 						entities.push_back(e);
+						//entities.push_back(std::make_shared<Entity>()
 
 						p->settings(sPlayer, Constants::width / 2, Constants::heigth / 2, 0, 20);
 						p->setDx(0);

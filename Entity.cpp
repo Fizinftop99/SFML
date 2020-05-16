@@ -2,15 +2,19 @@
 
 Entity::Entity() {
 	isLife = true;
+    /*anim = a;
+    x = X; y = Y;
+    angle = Angle;
+    radius = R;   */
 }
-
+/*
 void Entity::settings(Anim& a, float X, float Y, float Angle, int R) {
     anim = a;
     x = X; y = Y;
     angle = Angle;
     radius = R;
 }
-
+*/
 void Entity::draw(RenderWindow& app) {
     anim.getSprite().setPosition(x, y);
     anim.getSprite().setRotation(angle + 90);
