@@ -8,8 +8,9 @@
 #include <SFML/Graphics.hpp>
 #include <list>
 #include <memory>
-
-#include <iostream>
+#include <random>
+#include <algorithm>
+//#include <iostream>
 
 using namespace sf;
 
@@ -22,7 +23,11 @@ bool Game::isCollide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
 
 void Game::start()
 {
-	srand(time(0));
+	//srand(time(0));
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	int m = std::max(Constants::heigth, Constants::width);
+	std::uniform_int_distribution<> dis(0, m);
 
 	RenderWindow app(VideoMode(Constants::width, Constants::heigth), "Asteroids!");
 	app.setFramerateLimit(60);
@@ -42,9 +47,9 @@ void Game::start()
 	Sprite background(t2);
 
 	Anim sExplosion(t3, 0, 0, 256, 256, 48, 0.5);
-	Anim sRock(t4, 0, 0, 64, 64, 16, 0.2);
-	Anim sRock_small(t6, 0, 0, 64, 64, 16, 0.2);
-	Anim sBullet(t5, 0, 0, 32, 64, 16, 0.8);
+	Anim sRock(t4, 0, 0, 64, 64, 16, static_cast<float>(0.2));
+	Anim sRock_small(t6, 0, 0, 64, 64, 16, static_cast<float>(0.2));
+	Anim sBullet(t5, 0, 0, 32, 64, 16, static_cast<float>(0.8));
 	Anim sPlayer(t1, 40, 0, 40, 40, 1, 0);
 	Anim sPlayer_go(t1, 40, 40, 40, 40, 1, 0);
 	Anim sExplosion_ship(t7, 0, 0, 192, 192, 64, 0.5);
@@ -54,7 +59,7 @@ void Game::start()
 	for (int i = 0; i < 15; i++)
 	{
 		std::shared_ptr<Entity> a(new Asteroid());
-		a->settings(sRock, rand() % Constants::width, rand() % Constants::heigth, rand() % 360, 25);
+		a->settings(sRock, static_cast<float>(dis(gen) % Constants::width), static_cast<float>(dis(gen) % Constants::heigth), static_cast<float>(dis(gen) % 360), 25);
 		entities.push_back(a);
 	}
 
@@ -107,7 +112,7 @@ void Game::start()
 						{
 							if (a->getRadius() == 15) continue;
 							std::shared_ptr<Entity> e(new Asteroid());
-							e->settings(sRock_small, a->getX(), a->getY(), rand() % 360, 15);
+							e->settings(sRock_small, a->getX(), a->getY(), static_cast<float>(dis(gen) % 360), 15);
 							entities.push_back(e);
 						}
 
@@ -141,16 +146,15 @@ void Game::start()
 			if (e->getName() == "explosion")
 				if (e->getAnim().isEnd()) e->setIsLife(false);
 
-		if (rand() % 150 == 0)
+		if (dis(gen) % 150 == 0)
 		{
 			std::shared_ptr<Entity> a(new Asteroid());
-			a->settings(sRock, 0, rand() % Constants::heigth, rand() % 360, 25);
+			a->settings(sRock, 0, static_cast<float>(dis(gen) % Constants::heigth), static_cast<float>(dis(gen) % 360), 25);
 			entities.push_back(a);
 		}
 
 		for (auto i = entities.begin(); i != entities.end();)
 		{
-			//auto e = i;
 			i->get()->update();
 			i->get()->getAnim().update();
 
@@ -160,14 +164,6 @@ void Game::start()
 			}
 			else i++;
 		}
-
-		/*
-		for (auto e : entities) {
-			e->getAnim().update();
-			e->update();
-		}
-		*/
-
 
 		// drawing
 		app.draw(background);
