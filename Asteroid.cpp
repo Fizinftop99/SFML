@@ -2,8 +2,11 @@
 #include "constants.h"
 
 Asteroid::Asteroid() {
-    dx = rand() % 8 - 4;
-    dy = rand() % 8 - 4;
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(-4, 4);
+    dx = static_cast<float>(dis(gen));
+    dy = static_cast<float>(dis(gen));
     name = "asteroid";
 }
 

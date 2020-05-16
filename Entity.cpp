@@ -76,5 +76,3 @@ Anim& Entity::getAnim()
 {
     return anim;
 }
-
-
