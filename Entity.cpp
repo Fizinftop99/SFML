@@ -20,7 +20,6 @@ void Entity::draw(RenderWindow& app) {
     circle.setFillColor(Color(255, 0, 0, 170));
     circle.setPosition(x, y);
     circle.setOrigin(radius, radius);
-    app.draw(circle);
 }
 
 float Entity::getX()
