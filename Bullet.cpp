@@ -1,6 +1,8 @@
 #include "Bullet.h"
 
-Bullet::Bullet() {
+Bullet::Bullet(Anim& a, float X, float Y, float Angle, int R)
+{
+
     name = "bullet";
 }
 

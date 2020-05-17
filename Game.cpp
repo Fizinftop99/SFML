@@ -10,8 +10,6 @@
 #include <memory>
 #include <random>
 #include <algorithm>
-//#include <iostream>
-
 using namespace sf;
 
 bool Game::isCollide(std::shared_ptr<Entity> a, std::shared_ptr<Entity> b)
@@ -59,17 +57,15 @@ void Game::start()
 	for (int i = 0; i < 15; i++)
 	{
 		entities.push_back(
-			std::make_shared<Entity>(Asteroid(static_cast<float>(dis(gen) % Constants::width,
-												static_cast<float>(dis(gen) % Constants::width),
-												static_cast<float>(dis(gen) % 360), 25)
-												
-		std::shared_ptr<Entity> a(new Asteroid());
-		a->settings(sRock, static_cast<float>(dis(gen) % Constants::width), static_cast<float>(dis(gen) % Constants::heigth), static_cast<float>(dis(gen) % 360), 25);
-		entities.push_back(a);
+			std::make_shared<Entity>(Asteroid(sRock, static_cast<float>(dis(gen) % Constants::width),
+											static_cast<float>(dis(gen) % Constants::width),
+											static_cast<float>(dis(gen) % 360), 
+											25)));
+		
 	}
+	
+	std::shared_ptr<Player> p(new Player(sPlayer, 200, 200, 0, 20));
 
-	std::shared_ptr<Player> p(new Player());
-	p->settings(sPlayer, 200, 200, 0, 20);
 	entities.push_back(p);
 
 	/////main loop/////
@@ -84,9 +80,8 @@ void Game::start()
 			if (event.type == Event::KeyPressed)
 				if (event.key.code == Keyboard::Space)
 				{
-					std::shared_ptr<Entity> b(new Bullet());
-					b->settings(sBullet, p->getX(), p->getY(), p->getAngle(), 10);
-					entities.push_back(b);
+					
+					entities.push_back(std::make_shared<Entity>(Bullet(sBullet, p->getX(), p->getY(), p->getAngle(), 10)));
 					
 				}
 		}
@@ -104,19 +99,16 @@ void Game::start()
 					{
 						a->setIsLife(false);
 						b->setIsLife(false);
-
-						std::shared_ptr<Entity> e(new Entity());
-						e->settings(sExplosion, a->getX(), a->getY());
-						e->setName("explosion");
-						entities.push_back(e);
+						
+						entities.push_back(std::make_shared<Entity>(Entity(sExplosion, a->getX(), a->getY(), "explosion")));
 
 
 						for (int i = 0; i < 2; i++)
 						{
 							if (a->getRadius() == 15) continue;
-							std::shared_ptr<Entity> e(new Asteroid());
-							e->settings(sRock_small, a->getX(), a->getY(), static_cast<float>(dis(gen) % 360), 15);
-							entities.push_back(e);
+							
+							entities.push_back(
+								std::make_shared<Entity>(Asteroid(sRock_small, a->getX(), a->getY(), static_cast<float>(dis(gen) % 360), 15)));
 						}
 
 						
@@ -127,21 +119,13 @@ void Game::start()
 					{
 						
 						b->setIsLife(false);
-
-						std::shared_ptr<Entity> e(new Entity());
-						e->settings(sExplosion_ship, a->getX(), a->getY());
-						e->setName("explosion");
-						entities.push_back(e);
-						//entities.push_back(std::make_shared<Entity>()
-
-						p->settings(sPlayer, Constants::width / 2, Constants::heigth / 2, 0, 20);
-						p->setDx(0);
 						
-						p->setDy(0);
+						entities.push_back(std::make_shared<Entity>(Entity(sExplosion, a->getX(), a->getY(), "explosion")));
 						
+						p->setNewState(Constants::width / 2, Constants::heigth / 2, 0, 20);
 					}
 			}
-		//           */
+
 		if (p->getFlag())  p->setAnimation(sPlayer_go);
 		else   p->setAnimation(sPlayer);
 
@@ -152,9 +136,10 @@ void Game::start()
 
 		if (dis(gen) % 150 == 0)
 		{
-			std::shared_ptr<Entity> a(new Asteroid());
-			a->settings(sRock, 0, static_cast<float>(dis(gen) % Constants::heigth), static_cast<float>(dis(gen) % 360), 25);
-			entities.push_back(a);
+			entities.push_back(std::make_shared<Entity>(Asteroid(sRock, 0,
+																static_cast<float>(dis(gen) % Constants::width),
+																static_cast<float>(dis(gen) % 360),
+																25)));
 		}
 
 		for (auto i = entities.begin(); i != entities.end();)
@@ -171,7 +156,7 @@ void Game::start()
 
 		// drawing
 		app.draw(background);
-		for (auto&& i : entities) i->draw(app);
+		for (auto i : entities) i->draw(app);
 		app.display();
 	}
 

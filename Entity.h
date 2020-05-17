@@ -2,10 +2,8 @@
 #include "Animation.h"
 
 class Entity {
-private:
-    int radius;
-
 protected:
+    int radius;
     const float DEGTORAD = 0.017453f;
     float x, y, dx, dy, angle;
     std::string name;
@@ -14,6 +12,7 @@ protected:
 
 public:
     Entity();
+    Entity(Anim& a, float X, float Y, std::string newName);
 
     virtual ~Entity() {};
 
@@ -24,6 +23,8 @@ public:
     virtual void setFlag() {}; // function for class Player
 
     virtual void setAnimation() {}; // function for class Player
+
+    //virtual void setC
 
     //void settings(Anim& a, float X, float Y, float Angle = 0, int R = 1);
 

@@ -15,6 +15,10 @@ Asteroid::Asteroid(Anim& a, float X, float Y, float Angle, int R)
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(-4, 4);
+    x = X;
+    y = Y;
+    radius = R;
+    angle = Angle;
     dx = static_cast<float>(dis(gen));
     dy = static_cast<float>(dis(gen));
     name = "asteroid";

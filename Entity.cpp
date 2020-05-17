@@ -7,6 +7,13 @@ Entity::Entity() {
     angle = Angle;
     radius = R;   */
 }
+Entity::Entity(Anim& a, float X, float Y, std::string newName)
+{
+    isLife = true;
+    x = X;
+    y = Y;
+    name = newName;
+}
 /*
 void Entity::settings(Anim& a, float X, float Y, float Angle, int R) {
     anim = a;

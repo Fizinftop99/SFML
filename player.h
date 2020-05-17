@@ -3,10 +3,10 @@
 class Player : public Entity
 {
 private:
-	bool flag;
+	bool flag{ false };
 
 public:
-	Player();
+	Player(Anim& a, float X, float Y, float Angle, int R);
 
 	virtual ~Player() {};
 
@@ -16,10 +16,14 @@ public:
 
     virtual void setFlag(bool b);
 
-    void setDx(float flag);
-
-    void setDy(float flag);
-
 	virtual void setAnimation(Anim a);
+    
+	void setDx(float Dx);
+
+    void setDy(float Dy);
+
+	void setCoordinates(float X, float Y);
+
+	void setNewState(float X, float Y, float Dx, float Dy, float Angle = 0, int R = 1);
 };
 
